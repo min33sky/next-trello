@@ -24,12 +24,12 @@ export default function Header() {
 
         <div className="flex w-full flex-1 items-center justify-end space-x-5">
           {/* 서치바 */}
-          <form className="flex flex-1 items-center space-x-5 rounded-md bg-white p-2 shadow-md md:flex-initial">
+          <form className="flex flex-1 items-center space-x-4 rounded-md bg-white px-2 py-2 shadow-md md:flex-initial">
             <MagnifyingGlassIcon className="h-6 w-6 text-gray-400" />
             <input
               type="text"
               placeholder="검색"
-              className="flex-1 p-2 outline-none"
+              className="flex-1 text-lg outline-none"
             />
             <button hidden>Search</button>
           </form>
@@ -43,7 +43,7 @@ export default function Header() {
       <div className="flex items-center justify-center px-5 py-2 md:py-5">
         <p className="flex w-fit max-w-3xl items-center rounded-xl bg-white p-5 pr-5 text-sm font-light italic text-[#0055D1] shadow-xl ">
           <UserCircleIcon className="mr-1 inline-block h-10 w-10 text-[#0055D1]" />
-          GPT is summarising your tasks for the day...
+          GPT가 오늘의 할 일을 요약하고 있습니다...
         </p>
       </div>
     </header>

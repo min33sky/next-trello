@@ -1,7 +1,11 @@
 import './globals.css';
-import { Inter } from 'next/font/google';
+import { Nanum_Gothic } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+const nanumGothic = Nanum_Gothic({
+  weight: ['400', '700', '800'],
+  subsets: ['latin'],
+  variable: '--font-nanum-gothic',
+});
 
 export const metadata = {
   title: 'Next Trello',
@@ -15,7 +19,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`bg-[#F5F6F8] ${inter.className}`}>{children}</body>
+      <body
+        className={`bg-[#F5F6F8] antialiased ${nanumGothic.variable} font-nanumGothic `}
+      >
+        {children}
+      </body>
     </html>
   );
 }
