@@ -14,6 +14,7 @@ module.exports = {
       },
       fontFamily: {
         nanumGothic: ['var(--font-nanum-gothic)'],
+        nanumPenScript: ['var(--font-nanum-pen-script)'],
       },
     },
   },

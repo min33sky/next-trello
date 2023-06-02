@@ -1,11 +1,4 @@
 import './globals.css';
-import { Nanum_Gothic } from 'next/font/google';
-
-const nanumGothic = Nanum_Gothic({
-  weight: ['400', '700', '800'],
-  subsets: ['latin'],
-  variable: '--font-nanum-gothic',
-});
 
 export const metadata = {
   title: 'Next Trello',
@@ -19,9 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={`custom-scrollbar bg-[#F5F6F8] antialiased ${nanumGothic.variable} font-nanumGothic `}
-      >
+      <body className={`custom-scrollbar bg-[#F5F6F8] antialiased `}>
         {children}
       </body>
     </html>

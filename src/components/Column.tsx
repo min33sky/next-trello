@@ -16,8 +16,8 @@ enum idToColumnText {
 }
 
 /**
- * DnD를 위한 Column 컴포넌트
- * @description Column 컴포넌트 내부에서도 Dnd를 구현해야한다.
+ * DnD를 할 수 있는 Column 컴포넌트
+ * @description Todo, InProgress, Done 컬럼을 렌더링한다. 칼럼들은 드래그앤드롭 할 수 있다.
  */
 export default function Column({ id, todos, index }: ColumnProps) {
   return (
@@ -28,7 +28,7 @@ export default function Column({ id, todos, index }: ColumnProps) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          {/* Render droppable todos in the column */}
+          {/* Column 내부에서도 아이템들을 드래그 앤 드롭을 할 수 있어야 한다. */}
           <Droppable droppableId={index.toString()} type="card">
             {(provided, snapshot) => (
               <div
@@ -38,15 +38,17 @@ export default function Column({ id, todos, index }: ColumnProps) {
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >
-                <h2 className="flex justify-between p-2 text-xl font-bold">
-                  {idToColumnText[id]}
+                <>
+                  <h2 className="flex justify-between p-2 text-xl font-bold">
+                    {idToColumnText[id]}
 
-                  <span className="rounded-full bg-gray-200 px-2 py-1 text-sm font-normal text-gray-500">
-                    {todos.length}
-                  </span>
-                </h2>
+                    <span className="rounded-full bg-gray-200 px-2 py-1 text-sm font-normal text-gray-500">
+                      {todos.length}
+                    </span>
+                  </h2>
+                </>
 
-                {/* DND 영역 */}
+                {/* Item DnD 영역 */}
                 <div className="space-y-2">
                   {todos.map((todo, index) => (
                     <Draggable
@@ -70,8 +72,11 @@ export default function Column({ id, todos, index }: ColumnProps) {
                   {provided.placeholder}
 
                   <div className="flex items-end justify-end p-2">
-                    <button className="text-green-500 hover:text-green-600">
-                      <PlusCircleIcon className="h-10 w-10" />
+                    <button
+                      title="추가"
+                      className="text-green-500 hover:text-green-600"
+                    >
+                      <PlusCircleIcon className="h-8 w-8" />
                     </button>
                   </div>
                 </div>

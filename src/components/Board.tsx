@@ -16,7 +16,7 @@ export default function Board() {
   }, [getBoard]);
 
   const handleDragEnd = (result: DropResult) => {
-    console.log(result);
+    console.log('handleDragEnd: ', result, 'TODO: update board');
   };
 
   return (
