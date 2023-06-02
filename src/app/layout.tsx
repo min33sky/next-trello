@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`bg-[#F5F6F8] antialiased ${nanumGothic.variable} font-nanumGothic `}
+        className={`custom-scrollbar bg-[#F5F6F8] antialiased ${nanumGothic.variable} font-nanumGothic `}
       >
         {children}
       </body>
