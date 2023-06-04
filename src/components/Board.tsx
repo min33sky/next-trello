@@ -71,10 +71,6 @@ export default function Board() {
       const startColIndex = columns[Number(source.droppableId)];
       const finishColIndex = columns[Number(destination.droppableId)];
 
-      console.log('columns: ', columns);
-      console.log('startColIndex: ', startColIndex);
-      console.log('finishColIndex: ', finishColIndex);
-
       const startCol: Column = {
         id: startColIndex[0],
         todos: startColIndex[1].todos,
@@ -87,6 +83,34 @@ export default function Board() {
 
       console.log('startCol: ', startCol);
       console.log('finishCol: ', finishCol);
+
+      if (!startCol || !finishCol) return;
+
+      // 같은 위치로 드래그앤드롭 했을 때
+      if (source.index === destination.index && startCol === finishCol) return;
+
+      // 이동할 Todo를 기존 Column에서 제거
+      const newTodos = startCol.todos;
+      const [todoMoved] = newTodos.splice(source.index, 1);
+
+      if (startCol.id === finishCol.id) {
+        // 같은 Column 내에서 Todo를 이동했을 때
+        newTodos.splice(destination.index, 0, todoMoved);
+        const newCol = {
+          id: startCol.id,
+          todos: newTodos,
+        };
+
+        const updatedColumns = new Map(board.columns);
+        updatedColumns.set(startCol.id, newCol);
+
+        setBoardState({
+          ...board,
+          columns: updatedColumns,
+        });
+      } else {
+        // dragging task to another column
+      }
     }
   };
 
