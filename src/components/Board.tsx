@@ -7,8 +7,9 @@ import Column from './Column';
 
 export default function Board() {
   /**
-   * TODO: 컬럼 위치 변경 시, DB에 반영하기
-   * TODO: 카드 위치 변경 시, DB에 반영하기
+   * TODO: 컬럼 위치 변경 시, DB에 반영하기 (column order collection 만들기)
+   * TODO: 카드 위치 변경 시, DB에 반영하기 (Document에 order 필드 추가하기 - 배열을 사용할까??)
+   * ? 전체 Document를 해시테이블에 저장하고 배열에 순서를 저장하고 순회하면서 검색하는 방법?
    */
 
   const [board, getBoard, setBoardState, updateTodoInDB] = useBoardStore(
