@@ -110,6 +110,27 @@ export default function Board() {
         });
       } else {
         // dragging task to another column
+        const finishTodos = Array.from(finishCol.todos);
+        finishTodos.splice(destination.index, 0, todoMoved);
+
+        const updatedColumns = new Map(board.columns);
+
+        updatedColumns.set(startCol.id, {
+          id: startCol.id,
+          todos: newTodos,
+        });
+
+        updatedColumns.set(finishCol.id, {
+          id: finishCol.id,
+          todos: finishTodos,
+        });
+
+        // Update in DB
+
+        setBoardState({
+          ...board,
+          columns: updatedColumns,
+        });
       }
     }
   };
