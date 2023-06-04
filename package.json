@@ -16,6 +16,7 @@
     "appwrite": "^11.0.0",
     "autoprefixer": "10.4.14",
     "core-js-pure": "^3.30.2",
+    "encoding": "^0.1.13",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.4",
     "next": "13.4.4",

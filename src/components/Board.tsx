@@ -6,11 +6,21 @@ import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 import Column from './Column';
 
 export default function Board() {
-  const [board, getBoard, setBoardState] = useBoardStore((state) => [
-    state.board,
-    state.getBoard,
-    state.setBoardState,
-  ]);
+  /**
+   * TODO: 컬럼 위치 변경 시, DB에 반영하기
+   * TODO: 카드 위치 변경 시, DB에 반영하기
+   */
+
+  const [board, getBoard, setBoardState, updateTodoInDB] = useBoardStore(
+    (state) => [
+      state.board,
+      state.getBoard,
+      state.setBoardState,
+      state.updateTodoInDB,
+    ],
+  );
+
+  console.log('board: ', board);
 
   useEffect(() => {
     getBoard();
@@ -90,19 +100,22 @@ export default function Board() {
       if (source.index === destination.index && startCol === finishCol) return;
 
       // 이동할 Todo를 기존 Column에서 제거
-      const newTodos = startCol.todos;
-      const [todoMoved] = newTodos.splice(source.index, 1);
+      const updateTodos = startCol.todos;
+      const [todoMoved] = updateTodos.splice(source.index, 1);
 
       if (startCol.id === finishCol.id) {
         // 같은 Column 내에서 Todo를 이동했을 때
-        newTodos.splice(destination.index, 0, todoMoved);
-        const newCol = {
-          id: startCol.id,
-          todos: newTodos,
-        };
+        updateTodos.splice(destination.index, 0, todoMoved);
 
         const updatedColumns = new Map(board.columns);
-        updatedColumns.set(startCol.id, newCol);
+
+        updatedColumns.set(startCol.id, {
+          id: startCol.id,
+          todos: updateTodos,
+        });
+
+        // update in DB
+        updateTodoInDB(todoMoved, finishCol.id);
 
         setBoardState({
           ...board,
@@ -117,7 +130,7 @@ export default function Board() {
 
         updatedColumns.set(startCol.id, {
           id: startCol.id,
-          todos: newTodos,
+          todos: updateTodos,
         });
 
         updatedColumns.set(finishCol.id, {
@@ -126,6 +139,7 @@ export default function Board() {
         });
 
         // Update in DB
+        updateTodoInDB(todoMoved, finishCol.id);
 
         setBoardState({
           ...board,
@@ -154,6 +168,7 @@ export default function Board() {
                   <Column key={id} id={id} todos={column.todos} index={index} />
                 ),
               )}
+              {provided.placeholder}
             </div>
           )}
         </Droppable>
