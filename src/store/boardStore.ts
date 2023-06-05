@@ -1,4 +1,4 @@
-import { databases } from '@/libs/appwrite';
+import { databases, storage } from '@/libs/appwrite';
 import { getTodosGroupedByColumn } from '@/libs/getTodosGroupedByColumn';
 import { create } from 'zustand';
 
@@ -8,11 +8,13 @@ interface BoardState {
   setBoardState: (board: Board) => void; // Client에서 Board 정보를 업데이트
   updateTodoInDB: (todo: Todo, columnId: TypedColumn) => void; // DB에서 Todo 정보를 업데이트
 
+  deleteTask: (taskIndex: number, todo: Todo, id: TypedColumn) => void;
+
   searchString: string; // 검색어
   setSearchString: (searchString: string) => void; // 검색어 업데이트 함수
 }
 
-const useBoardStore = create<BoardState>((set) => ({
+const useBoardStore = create<BoardState>((set, get) => ({
   board: {
     columns: new Map<TypedColumn, Column>(),
   },
@@ -32,6 +34,31 @@ const useBoardStore = create<BoardState>((set) => ({
       },
     );
   },
+
+  deleteTask: async (taskIndex, todo, id) => {
+    const updatedColumns = new Map(get().board.columns);
+
+    // delete todoId from updatedColumns
+    updatedColumns.get(id)?.todos.splice(taskIndex, 1);
+
+    set({
+      board: {
+        columns: updatedColumns,
+      },
+    });
+
+    //* delete todo from DB
+    if (todo.image) {
+      await storage.deleteFile(todo.image.bucketId, todo.image.fileId);
+    }
+
+    await databases.deleteDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+      process.env.NEXT_PUBLIC_APPWRITE_TODOS_COLLECTION_ID,
+      todo.$id,
+    );
+  },
+
   searchString: '',
   setSearchString: (searchString) => set({ searchString }),
 }));

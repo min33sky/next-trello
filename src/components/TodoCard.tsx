@@ -1,3 +1,4 @@
+import useBoardStore from '@/store/boardStore';
 import { XCircleIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 import {
@@ -22,6 +23,8 @@ export default function TodoCard({
   draggableProps,
   dragHandleProps,
 }: TodoCardProps) {
+  const deleteTask = useBoardStore((state) => state.deleteTask);
+
   return (
     <div
       className="space-y-2 rounded-md bg-white drop-shadow-md"
@@ -31,7 +34,11 @@ export default function TodoCard({
     >
       <div className="flex items-center justify-between p-5">
         <p className="font-nanumPenScript">{todo.title}</p>
-        <button title="제거" className="text-red-500 hover:text-red-600">
+        <button
+          onClick={() => deleteTask(index, todo, id)}
+          title="제거"
+          className="text-red-500 hover:text-red-600"
+        >
           <XCircleIcon className="ml-5 h-8 w-8" />
         </button>
       </div>
