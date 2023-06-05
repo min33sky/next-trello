@@ -1,17 +1,35 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { UserCircleIcon } from '@heroicons/react/24/solid';
 import Avatar from 'react-avatar';
 import useBoardStore from '@/store/boardStore';
+import fetchSuggestion from '@/libs/fetchSuggestion';
 
 export default function Header() {
-  const [searchString, setSearchString] = useBoardStore((state) => [
+  const [board, searchString, setSearchString] = useBoardStore((state) => [
+    state.board,
     state.searchString,
     state.setSearchString,
   ]);
+
+  const [loading, setLoading] = useState(false);
+  const [suggestion, setSuggestion] = useState('');
+
+  useEffect(() => {
+    if (board.columns.size === 0) return;
+    setLoading(true);
+
+    const fetchSuggestionFunc = async () => {
+      const suggesion = await fetchSuggestion(board);
+      setSuggestion(suggesion);
+      setLoading(false);
+    };
+
+    fetchSuggestionFunc();
+  }, [board]);
 
   return (
     <header>
@@ -50,8 +68,14 @@ export default function Header() {
       {/* GPT 제안 */}
       <div className="flex items-center justify-center px-5 py-2 md:py-5">
         <p className="flex w-fit max-w-3xl items-center rounded-xl bg-white p-5 pr-5 text-sm font-light italic text-[#0055D1] shadow-xl ">
-          <UserCircleIcon className="mr-1 inline-block h-10 w-10 text-[#0055D1]" />
-          GPT가 오늘의 할 일을 요약하고 있습니다...
+          <UserCircleIcon
+            className={`mr-1 inline-block h-10 w-10 text-[#0055D1] ${
+              loading && 'animate-spin'
+            }`}
+          />
+          {suggestion && !loading
+            ? suggestion
+            : 'GPT가 오늘의 할 일을 요약하고 있습니다...'}
         </p>
       </div>
     </header>

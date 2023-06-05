@@ -10,6 +10,7 @@ export default function Board() {
    * TODO: 컬럼 위치 변경 시, DB에 반영하기 (column order collection 만들기)
    * TODO: 카드 위치 변경 시, DB에 반영하기 (Document에 order 필드 추가하기 - 배열을 사용할까??)
    * ? 전체 Document를 해시테이블에 저장하고 배열에 순서를 저장하고 순회하면서 검색하는 방법?
+   * TODO: Column을 미리 랜더링하고 스켈레톤 로딩을 렌더링한다.
    */
 
   const [board, getBoard, setBoardState, updateTodoInDB] = useBoardStore(
@@ -151,7 +152,7 @@ export default function Board() {
   };
 
   return (
-    <div ref={elementRef} className="md:px0 px-2 py-10">
+    <div ref={elementRef} className="px-2 py-10 md:px-0">
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable
           droppableId="board"
