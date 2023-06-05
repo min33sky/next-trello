@@ -7,6 +7,9 @@ interface BoardState {
   getBoard: () => void; // DB에서 Board 정보를 가져와서 board state를 업데이트
   setBoardState: (board: Board) => void; // Client에서 Board 정보를 업데이트
   updateTodoInDB: (todo: Todo, columnId: TypedColumn) => void; // DB에서 Todo 정보를 업데이트
+
+  searchString: string; // 검색어
+  setSearchString: (searchString: string) => void; // 검색어 업데이트 함수
 }
 
 const useBoardStore = create<BoardState>((set) => ({
@@ -29,6 +32,8 @@ const useBoardStore = create<BoardState>((set) => ({
       },
     );
   },
+  searchString: '',
+  setSearchString: (searchString) => set({ searchString }),
 }));
 
 export default useBoardStore;

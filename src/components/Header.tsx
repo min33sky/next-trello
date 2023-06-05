@@ -5,8 +5,14 @@ import Image from 'next/image';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { UserCircleIcon } from '@heroicons/react/24/solid';
 import Avatar from 'react-avatar';
+import useBoardStore from '@/store/boardStore';
 
 export default function Header() {
+  const [searchString, setSearchString] = useBoardStore((state) => [
+    state.searchString,
+    state.setSearchString,
+  ]);
+
   return (
     <header>
       <div className="flex flex-col items-center bg-gray-500/10 p-5 md:flex-row">
@@ -30,6 +36,8 @@ export default function Header() {
               type="text"
               placeholder="검색"
               className="flex-1 text-lg outline-none"
+              value={searchString}
+              onChange={(e) => setSearchString(e.target.value)}
             />
             <button hidden>Search</button>
           </form>
