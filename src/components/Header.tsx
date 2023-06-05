@@ -28,9 +28,9 @@ export default function Header() {
           className="w-44 object-contain pb-10 md:w-56 md:pb-0"
         />
 
-        <div className="flex w-full flex-1 items-center justify-end space-x-5">
+        <div className="flex flex-1 items-center justify-end space-x-2">
           {/* 서치바 */}
-          <form className="flex flex-1 items-center space-x-4 rounded-md bg-white px-2 py-2 shadow-md md:flex-initial">
+          <form className="flex items-center space-x-2 rounded-md bg-white px-2 py-2 shadow-md md:flex-initial">
             <MagnifyingGlassIcon className="h-6 w-6 text-gray-400" />
             <input
               type="text"

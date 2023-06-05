@@ -151,7 +151,7 @@ export default function Board() {
   };
 
   return (
-    <div ref={elementRef}>
+    <div ref={elementRef} className="md:px0 px-2 py-10">
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable
           droppableId="board"

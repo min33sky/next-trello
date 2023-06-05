@@ -1,7 +1,7 @@
 import React from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import TodoCard from './TodoCard';
-import { PlusCircleIcon } from '@heroicons/react/24/outline';
+import { PlusCircleIcon, PlusIcon } from '@heroicons/react/24/outline';
 import useBoardStore from '@/store/boardStore';
 
 interface ColumnProps {
@@ -35,8 +35,8 @@ export default function Column({ id, todos, index }: ColumnProps) {
           <Droppable droppableId={index.toString()} type="card">
             {(provided, snapshot) => (
               <div
-                className={`rounded-2xl p-2 shadow-sm ${
-                  snapshot.isDraggingOver ? 'bg-green-200' : 'bg-white/50'
+                className={`rounded-2xl p-2 shadow-xl ${
+                  snapshot.isDraggingOver ? 'bg-green-200' : 'bg-white/40'
                 }`}
                 ref={provided.innerRef}
                 {...provided.droppableProps}
@@ -94,9 +94,10 @@ export default function Column({ id, todos, index }: ColumnProps) {
                   <div className="flex items-end justify-end p-2">
                     <button
                       title="추가"
-                      className="text-green-500 hover:text-green-600"
+                      className="flex items-center rounded-lg border border-green-500 px-3 py-2 text-green-500 transition hover:bg-green-500 hover:text-white"
                     >
-                      <PlusCircleIcon className="h-8 w-8" />
+                      <PlusIcon className="mr-2 h-5 w-5" />
+                      <p className="">작성</p>
                     </button>
                   </div>
                 </div>
