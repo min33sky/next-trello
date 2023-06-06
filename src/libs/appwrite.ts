@@ -8,4 +8,67 @@ const account = new Account(client);
 const databases = new Databases(client);
 const storage = new Storage(client);
 
-export { client, account, databases, storage, ID };
+// ***** Appwrite API *****
+
+/**
+ * DB에서 Document를 삭제합니다.
+ * @param documentId
+ */
+const deleteDocumentById = async (documentId: string) => {
+  try {
+    await databases.deleteDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+      process.env.NEXT_PUBLIC_APPWRITE_TODOS_COLLECTION_ID,
+      documentId,
+    );
+
+    console.log('>>>>> deleteDocumentById success ~~~~~~~~~~~~');
+  } catch (error) {
+    console.log('>>>>> deleteDocumentById error : ', error);
+  }
+};
+
+/**
+ * DB에서 Document를 업데이트합니다.
+ * @param documentId
+ * @param data
+ */
+const updateDocumentById = async (documentId: string, data: any) => {
+  try {
+    await databases.updateDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+      process.env.NEXT_PUBLIC_APPWRITE_TODOS_COLLECTION_ID,
+      documentId,
+      data,
+    );
+
+    console.log('>>>>> updateDocumentById success ~~~~~~~~~~~~');
+  } catch (error) {
+    console.log('>>>>> updateDocumentById error : ', error);
+  }
+};
+
+/**
+ * Storage에서 File을 삭제합니다.
+ * @param bucketId
+ * @param fileId
+ */
+const deleteFile = async (bucketId: string, fileId: string) => {
+  try {
+    await storage.deleteFile(bucketId, fileId);
+    console.log('>>>>> deleteFile success ~~~~~~~~~~~~');
+  } catch (error) {
+    console.log('>>>>> deleteFile error : ', error);
+  }
+};
+
+export {
+  client,
+  account,
+  databases,
+  storage,
+  ID,
+  deleteDocumentById,
+  updateDocumentById,
+  deleteFile,
+};
