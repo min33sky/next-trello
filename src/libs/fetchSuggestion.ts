@@ -1,5 +1,8 @@
 import formatTodosForAI from './formatTodosForAI';
 
+/**
+ * AI에게 요청을 보내서 요약문을 받아옵니다.
+ */
 export default async function fetchSuggestion(board: Board) {
   const todos = formatTodosForAI(board);
 

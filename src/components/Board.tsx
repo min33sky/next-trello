@@ -165,11 +165,32 @@ export default function Board() {
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
-              {Array.from(board.columns.entries()).map(
-                ([id, column], index) => (
-                  <Column key={id} id={id} todos={column.todos} index={index} />
-                ),
+              {board.columns.size === 0 ? (
+                //? Column이 없을 때 슼켈레톤 로딩을 렌더링한다.
+                <>
+                  {['todo', 'inprogress', 'done'].map((title, index) => (
+                    <Column
+                      key={index}
+                      id={title as TypedColumn}
+                      index={index}
+                    />
+                  ))}
+                </>
+              ) : (
+                <>
+                  {Array.from(board.columns.entries()).map(
+                    ([id, column], index) => (
+                      <Column
+                        key={id}
+                        id={id}
+                        todos={column.todos}
+                        index={index}
+                      />
+                    ),
+                  )}
+                </>
               )}
+
               {provided.placeholder}
             </div>
           )}

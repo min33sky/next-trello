@@ -6,7 +6,7 @@ import useBoardStore from '@/store/boardStore';
 
 interface ColumnProps {
   id: TypedColumn;
-  todos: Todo[];
+  todos?: Todo[];
   index: number;
 }
 
@@ -47,8 +47,8 @@ export default function Column({ id, todos, index }: ColumnProps) {
 
                     <span className="rounded-full bg-gray-200 px-2 py-1 text-sm font-normal text-gray-500">
                       {!searchString
-                        ? todos.length
-                        : todos.filter((todo) =>
+                        ? todos?.length
+                        : todos?.filter((todo) =>
                             todo.title
                               .toLowerCase()
                               .includes(searchString.toLowerCase()),
@@ -59,7 +59,7 @@ export default function Column({ id, todos, index }: ColumnProps) {
 
                 {/* Item DnD 영역 */}
                 <div className="space-y-2">
-                  {todos.map((todo, index) => {
+                  {todos?.map((todo, index) => {
                     if (
                       searchString &&
                       !todo.title
