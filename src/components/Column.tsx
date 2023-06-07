@@ -5,6 +5,7 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 import useBoardStore from '@/store/boardStore';
 import SkeletonLoader from './SkeletonLoader';
 import { idToColumnText } from '@/utils/idToColumnText';
+import { useModalStore } from '@/store/modalStore';
 
 interface ColumnProps {
   id: TypedColumn;
@@ -21,6 +22,8 @@ export default function Column({ id, todos, index }: ColumnProps) {
     state.isLoading,
     state.searchString,
   ]);
+
+  const openModal = useModalStore((state) => state.openModal);
 
   return (
     <Draggable draggableId={id} index={index}>
@@ -99,7 +102,7 @@ export default function Column({ id, todos, index }: ColumnProps) {
                     </>
                   ) : (
                     <>
-                      <p className="py-6 text-center text-xl text-slate-400">
+                      <p className="py-5 text-center text-xl text-slate-400">
                         비어있어요.
                       </p>
                     </>
@@ -110,6 +113,7 @@ export default function Column({ id, todos, index }: ColumnProps) {
                   <div className="flex items-end justify-end p-2">
                     <button
                       title="추가"
+                      onClick={openModal}
                       className="flex items-center rounded-lg border border-green-600 px-3 py-2 text-green-600 transition hover:bg-green-500 hover:text-white"
                     >
                       <PlusIcon className="mr-2 h-5 w-5" />

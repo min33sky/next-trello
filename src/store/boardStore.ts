@@ -17,10 +17,21 @@ interface BoardState {
   setBoardState: (board: Board) => void; // Client에서 Board 정보를 업데이트
 
   updateTodoInDB: (todo: Todo, columnId: TypedColumn) => void; // DB에서 Todo 정보를 업데이트
+
+  addTask: (todo: string, columnId: TypedColumn, image?: File | null) => void; // DB에서 Todo 정보를 추가
   deleteTask: (taskIndex: number, todo: Todo, id: TypedColumn) => void; // DB에서 Todo 정보를 삭제
 
   searchString: string; // 검색어
   setSearchString: (searchString: string) => void; // 검색어 업데이트 함수
+
+  newTaskInput: string; // 새로운 Task 내용
+  setNewTaskInput: (newTaskInput: string) => void; // 새로운 Task 내용 업데이트 함수
+
+  newTaskType: TypedColumn; // 새로운 Task의 Column
+  setNewTaskType: (columnId: TypedColumn) => void; // 새로운 Task의 Column 업데이트 함수
+
+  image: File | null;
+  setImage: (image: File | null) => void;
 }
 
 const useBoardStore = create<BoardState>((set, get) => ({
@@ -57,6 +68,20 @@ const useBoardStore = create<BoardState>((set, get) => ({
     });
   },
 
+  addTask: async (todo: string, columnId: TypedColumn, image?: File | null) => {
+    let file: Image | undefined;
+
+    if (image) {
+      // const fileUploaded = await uploadImage(image);
+      // if(fileUploaded) {
+      //   file = {
+      //     fileId: fileUploaded.$id,
+      //     bucketId: fileUploaded.bucketId,
+      //   }
+      // }
+    }
+  },
+
   deleteTask: async (taskIndex, todo, id) => {
     const updatedColumns = new Map(get().board.columns);
 
@@ -69,18 +94,26 @@ const useBoardStore = create<BoardState>((set, get) => ({
       },
     });
 
-    //* delete todo from DB
+    //* DB에서 Todo 정보를 삭제
+
     if (todo.image) {
       // await storage.deleteFile(todo.image.bucketId, todo.image.fileId);
       await deleteFile(todo.image.bucketId, todo.image.fileId);
     }
-
     await deleteDocumentById(todo.$id);
   },
 
   searchString: '',
-
   setSearchString: (searchString) => set({ searchString }),
+
+  newTaskInput: '',
+  setNewTaskInput: (newTaskInput) => set({ newTaskInput }),
+
+  newTaskType: 'todo',
+  setNewTaskType: (newTaskType) => set({ newTaskType }),
+
+  image: null,
+  setImage: (image) => set({ image }),
 }));
 
 export default useBoardStore;
