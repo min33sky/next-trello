@@ -4,6 +4,7 @@ import TodoCard from './TodoCard';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import useBoardStore from '@/store/boardStore';
 import SkeletonLoader from './SkeletonLoader';
+import { idToColumnText } from '@/utils/idToColumnText';
 
 interface ColumnProps {
   id: TypedColumn;
@@ -11,18 +12,15 @@ interface ColumnProps {
   index: number;
 }
 
-enum idToColumnText {
-  'todo' = '할 일',
-  'inprogress' = '진행 중',
-  'done' = '완료',
-}
-
 /**
  * DnD를 할 수 있는 Column 컴포넌트
  * @description Todo, InProgress, Done 컬럼을 렌더링한다. 칼럼들은 드래그앤드롭 할 수 있다.
  */
 export default function Column({ id, todos, index }: ColumnProps) {
-  const searchString = useBoardStore((state) => state.searchString);
+  const [isLoading, searchString] = useBoardStore((state) => [
+    state.isLoading,
+    state.searchString,
+  ]);
 
   return (
     <Draggable draggableId={id} index={index}>
@@ -60,13 +58,13 @@ export default function Column({ id, todos, index }: ColumnProps) {
 
                 {/* Item DnD 영역 */}
                 <div className="space-y-2">
-                  {!todos ? (
+                  {isLoading ? (
                     <>
                       {Array.from({ length: 3 - index }).map((_, index) => (
                         <SkeletonLoader key={index} />
                       ))}
                     </>
-                  ) : (
+                  ) : todos && todos.length > 0 ? (
                     <>
                       {todos?.map((todo, index) => {
                         //? 검색어가 있을 경우
@@ -99,6 +97,12 @@ export default function Column({ id, todos, index }: ColumnProps) {
                         );
                       })}
                     </>
+                  ) : (
+                    <>
+                      <p className="py-6 text-center text-xl text-slate-400">
+                        비어있어요.
+                      </p>
+                    </>
                   )}
 
                   {provided.placeholder}
@@ -106,10 +110,10 @@ export default function Column({ id, todos, index }: ColumnProps) {
                   <div className="flex items-end justify-end p-2">
                     <button
                       title="추가"
-                      className="flex items-center rounded-lg border border-green-500 px-3 py-2 text-green-500 transition hover:bg-green-500 hover:text-white"
+                      className="flex items-center rounded-lg border border-green-600 px-3 py-2 text-green-600 transition hover:bg-green-500 hover:text-white"
                     >
                       <PlusIcon className="mr-2 h-5 w-5" />
-                      <p className="">작성</p>
+                      <p className="font-bold">추가</p>
                     </button>
                   </div>
                 </div>

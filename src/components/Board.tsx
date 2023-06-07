@@ -22,7 +22,7 @@ export default function Board() {
     ],
   );
 
-  console.log('board: ', board);
+  // console.log('board: ', board);
 
   useEffect(() => {
     getBoard();

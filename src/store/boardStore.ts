@@ -9,6 +9,9 @@ import { getTodosGroupedByColumn } from '@/libs/getTodosGroupedByColumn';
 import { create } from 'zustand';
 
 interface BoardState {
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+
   board: Board;
   getBoard: () => void; // DB에서 Board 정보를 가져와서 board state를 업데이트
   setBoardState: (board: Board) => void; // Client에서 Board 정보를 업데이트
@@ -21,13 +24,18 @@ interface BoardState {
 }
 
 const useBoardStore = create<BoardState>((set, get) => ({
+  isLoading: true,
+  setIsLoading: (isLoading) => set({ isLoading }),
+
   board: {
     columns: new Map<TypedColumn, Column>(),
   },
 
   getBoard: async () => {
+    get().setIsLoading(true);
     const board = await getTodosGroupedByColumn();
     set({ board });
+    get().setIsLoading(false);
   },
 
   setBoardState: (board) => set({ board }),
