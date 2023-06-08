@@ -16,18 +16,25 @@ function Modal() {
     state.closeModal,
   ]);
 
-  const [image, setImage, newTaskInput, setNewTaskInput] = useBoardStore(
-    (state) => [
+  const [addTask, newTaskType, image, setImage, newTaskInput, setNewTaskInput] =
+    useBoardStore((state) => [
+      state.addTask,
+      state.newTaskType,
       state.image,
       state.setImage,
       state.newTaskInput,
       state.setNewTaskInput,
-    ],
-  );
+    ]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('submit');
+
+    if (!newTaskInput) return;
+
+    addTask(newTaskInput, newTaskType, image);
+    setImage(null);
+    closeModal();
   };
 
   return (

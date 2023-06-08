@@ -62,6 +62,22 @@ const deleteFile = async (bucketId: string, fileId: string) => {
   }
 };
 
+/**
+ * Storage에 Image를 업로드합니다.
+ * @param file
+ */
+const uploadImage = async (file: File) => {
+  if (!file) return;
+
+  const fileUploaded = await storage.createFile(
+    process.env.NEXT_PUBLIC_APPWRITE_STORAGE_BUCKET_ID,
+    ID.unique(),
+    file,
+  );
+
+  return fileUploaded;
+};
+
 export {
   client,
   account,
@@ -71,4 +87,5 @@ export {
   deleteDocumentById,
   updateDocumentById,
   deleteFile,
+  uploadImage,
 };

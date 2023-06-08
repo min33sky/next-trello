@@ -18,12 +18,18 @@ interface ColumnProps {
  * @description Todo, InProgress, Done 컬럼을 렌더링한다. 칼럼들은 드래그앤드롭 할 수 있다.
  */
 export default function Column({ id, todos, index }: ColumnProps) {
-  const [isLoading, searchString] = useBoardStore((state) => [
+  const [isLoading, searchString, setNewTaskType] = useBoardStore((state) => [
     state.isLoading,
     state.searchString,
+    state.setNewTaskType,
   ]);
 
   const openModal = useModalStore((state) => state.openModal);
+
+  const handleAddTodo = () => {
+    setNewTaskType(id);
+    openModal();
+  };
 
   return (
     <Draggable draggableId={id} index={index}>
@@ -37,7 +43,7 @@ export default function Column({ id, todos, index }: ColumnProps) {
           <Droppable droppableId={index.toString()} type="card">
             {(provided, snapshot) => (
               <div
-                className={`rounded-2xl p-2 shadow-xl ${
+                className={`rounded-2xl p-2 shadow-xl  ${
                   snapshot.isDraggingOver ? 'bg-green-200' : 'bg-white/40'
                 }`}
                 ref={provided.innerRef}
@@ -113,8 +119,9 @@ export default function Column({ id, todos, index }: ColumnProps) {
                   <div className="flex items-end justify-end p-2">
                     <button
                       title="추가"
-                      onClick={openModal}
-                      className="flex items-center rounded-lg border border-green-600 px-3 py-2 text-green-600 transition hover:bg-green-500 hover:text-white"
+                      onClick={handleAddTodo}
+                      className="flex items-center rounded-lg border border-green-600 px-3  py-2 text-green-600 outline-none transition
+                                  hover:bg-green-500 hover:text-white focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                     >
                       <PlusIcon className="mr-2 h-5 w-5" />
                       <p className="font-bold">추가</p>
