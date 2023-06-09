@@ -64,11 +64,9 @@ const useBoardStore = create<BoardState>((set, get) => ({
   addTask: async (todo: string, columnId: TypedColumn, image?: File | null) => {
     let file: Image | undefined;
 
-    //? 이미지가 존재하면 이미지를 먼저 업로드하고 파일 정보를 가져온다.
+    //* 이미지가 존재하면 이미지를 먼저 업로드하고 파일 정보를 가져온다.
     if (image) {
       const fileUploaded = await uploadImage(image);
-
-      console.log('######## 업로드 된 파일 정보 : ', fileUploaded);
 
       if (fileUploaded) {
         file = {
@@ -78,29 +76,21 @@ const useBoardStore = create<BoardState>((set, get) => ({
       }
     }
 
-    // const { $id } = await databases.createDocument(
-    //   process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-    //   process.env.NEXT_PUBLIC_APPWRITE_TODOS_COLLECTION_ID,
-    //   ID.unique(),
-    //   {
-    //     title: todo,
-    //     status: columnId,
-    //     // include image if it exists
-    //     ...(file && { image: JSON.stringify(file) }),
-    //   },
-    // );
-
+    //* DB에 새 작업을 추가한다.
     const { $id } = await createDocument({
       title: todo,
       status: columnId,
-      // include image if it exists
+      //? 이미지 정보는 { fileId: string, bucketId: string } 형태로 저장되므로
+      //? JSON.stringify()를 통해 문자열로 변환하여 저장한다.
       ...(file && { image: JSON.stringify(file) }),
     });
 
+    //* 인풋 초기화
     set({ newTaskInput: '' });
 
+    //* 추가한 Task를 전역 상태에 반영한다.
     set((state) => {
-      const newColumns = new Map(state.board.columns);
+      const updateColumns = new Map(state.board.columns);
 
       const newTodo: Todo = {
         $id,
@@ -110,20 +100,20 @@ const useBoardStore = create<BoardState>((set, get) => ({
         ...(file && { image: file }),
       };
 
-      const column = newColumns.get(columnId);
+      const column = updateColumns.get(columnId);
 
       if (!column) {
-        newColumns.set(columnId, {
+        updateColumns.set(columnId, {
           id: columnId,
           todos: [newTodo],
         });
       } else {
-        newColumns.get(columnId)?.todos.push(newTodo);
+        updateColumns.get(columnId)?.todos.push(newTodo);
       }
 
       return {
         board: {
-          columns: newColumns,
+          columns: updateColumns,
         },
       };
     });
