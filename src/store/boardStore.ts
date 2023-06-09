@@ -1,5 +1,6 @@
 import {
   ID,
+  createDocument,
   databases,
   deleteDocumentById,
   deleteFile,
@@ -54,16 +55,6 @@ const useBoardStore = create<BoardState>((set, get) => ({
   setBoardState: (board) => set({ board }),
 
   updateTodoInDB: async (todo, columnId) => {
-    // await databases.updateDocument(
-    //   process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-    //   process.env.NEXT_PUBLIC_APPWRITE_TODOS_COLLECTION_ID,
-    //   todo.$id,
-    //   {
-    //     title: todo.title,
-    //     status: columnId,
-    //   },
-    // );
-
     await updateDocumentById(todo.$id, {
       title: todo.title,
       status: columnId,
@@ -73,8 +64,12 @@ const useBoardStore = create<BoardState>((set, get) => ({
   addTask: async (todo: string, columnId: TypedColumn, image?: File | null) => {
     let file: Image | undefined;
 
+    //? 이미지가 존재하면 이미지를 먼저 업로드하고 파일 정보를 가져온다.
     if (image) {
       const fileUploaded = await uploadImage(image);
+
+      console.log('######## 업로드 된 파일 정보 : ', fileUploaded);
+
       if (fileUploaded) {
         file = {
           fileId: fileUploaded.$id,
@@ -83,17 +78,24 @@ const useBoardStore = create<BoardState>((set, get) => ({
       }
     }
 
-    const { $id } = await databases.createDocument(
-      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-      process.env.NEXT_PUBLIC_APPWRITE_TODOS_COLLECTION_ID,
-      ID.unique(),
-      {
-        title: todo,
-        status: columnId,
-        // include image if it exists
-        ...(file && { image: JSON.stringify(file) }),
-      },
-    );
+    // const { $id } = await databases.createDocument(
+    //   process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+    //   process.env.NEXT_PUBLIC_APPWRITE_TODOS_COLLECTION_ID,
+    //   ID.unique(),
+    //   {
+    //     title: todo,
+    //     status: columnId,
+    //     // include image if it exists
+    //     ...(file && { image: JSON.stringify(file) }),
+    //   },
+    // );
+
+    const { $id } = await createDocument({
+      title: todo,
+      status: columnId,
+      // include image if it exists
+      ...(file && { image: JSON.stringify(file) }),
+    });
 
     set({ newTaskInput: '' });
 

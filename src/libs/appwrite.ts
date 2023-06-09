@@ -8,7 +8,27 @@ const account = new Account(client);
 const databases = new Databases(client);
 const storage = new Storage(client);
 
-// ***** Appwrite API *****
+// ********************************************************************************************* //
+// ************************************  Appwrite API  ***************************************** //
+// ********************************************************************************************* //
+
+/**
+ * DB에 Document를 생성합니다.
+ * @param data DB에 저장할 데이터
+ */
+const createDocument = async (data: Record<string, any>) => {
+  try {
+    return await databases.createDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+      process.env.NEXT_PUBLIC_APPWRITE_TODOS_COLLECTION_ID,
+      ID.unique(),
+      data,
+    );
+  } catch (error) {
+    console.log('>>>>> createDocument error : ', error);
+    throw error;
+  }
+};
 
 /**
  * DB에서 Document를 삭제합니다.
@@ -33,7 +53,10 @@ const deleteDocumentById = async (documentId: string) => {
  * @param documentId
  * @param data
  */
-const updateDocumentById = async (documentId: string, data: any) => {
+const updateDocumentById = async (
+  documentId: string,
+  data: Record<string, any>,
+) => {
   try {
     await databases.updateDocument(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
@@ -67,15 +90,19 @@ const deleteFile = async (bucketId: string, fileId: string) => {
  * @param file
  */
 const uploadImage = async (file: File) => {
+  console.log('###### 파일 : ', file);
+
   if (!file) return;
 
-  const fileUploaded = await storage.createFile(
-    process.env.NEXT_PUBLIC_APPWRITE_STORAGE_BUCKET_ID,
-    ID.unique(),
-    file,
-  );
-
-  return fileUploaded;
+  try {
+    return await storage.createFile(
+      process.env.NEXT_PUBLIC_APPWRITE_STORAGE_BUCKET_ID,
+      ID.unique(),
+      file,
+    );
+  } catch (error) {
+    console.log('>>>>> uploadImage error : ', error);
+  }
 };
 
 export {
@@ -84,6 +111,7 @@ export {
   databases,
   storage,
   ID,
+  createDocument,
   deleteDocumentById,
   updateDocumentById,
   deleteFile,

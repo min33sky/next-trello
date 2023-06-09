@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Fragment, useRef } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { useModalStore } from '@/store/modalStore';
 import useBoardStore from '@/store/boardStore';
@@ -10,6 +10,7 @@ import { PhotoIcon } from '@heroicons/react/24/outline';
 
 function Modal() {
   const imagePickerRef = useRef<HTMLInputElement>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState('');
 
   const [isOpen, closeModal] = useModalStore((state) => [
     state.isOpen,
@@ -26,9 +27,41 @@ function Modal() {
       state.setNewTaskInput,
     ]);
 
+  /**
+   * 이미지 업로드 핸들러
+   */
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+
+    // check e is an image
+    if (!e.target.files![0].type.startsWith('image/')) return;
+    setImage(e.target.files![0]);
+    e.target.value = '';
+  };
+
+  console.log('imagePreviewUrl : ', imagePreviewUrl);
+
+  /**
+   * 이미지 업로드 시, 미리보기를 위해 imagePreviewUrl을 생성한다.
+   * 이미지 업로드를 취소하면, imagePreviewUrl을 제거한다.
+   */
+  useEffect(() => {
+    if (image) {
+      const url = URL.createObjectURL(image);
+      setImagePreviewUrl(url);
+    }
+    return () => {
+      URL.revokeObjectURL(imagePreviewUrl);
+      setImagePreviewUrl('');
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [image]);
+
+  /**
+   * 폼 제출 핸들러
+   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('submit');
 
     if (!newTaskInput) return;
 
@@ -107,7 +140,7 @@ function Modal() {
                       width={200}
                       height={200}
                       className="mt-2 h-44 w-full cursor-not-allowed object-cover filter transition-all duration-150 hover:grayscale"
-                      src={URL.createObjectURL(image)}
+                      src={imagePreviewUrl}
                       onClick={() => setImage(null)}
                     />
                   )}
@@ -116,11 +149,7 @@ function Modal() {
                     type="file"
                     ref={imagePickerRef}
                     hidden
-                    onChange={(e) => {
-                      // check e is an image
-                      if (!e.target.files![0].type.startsWith('image/')) return;
-                      setImage(e.target.files![0]);
-                    }}
+                    onChange={handleImageUpload}
                   />
                 </div>
 
