@@ -18,20 +18,22 @@
 
 @layer components {
   .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
+    width: 0.5em;
+    overflow-x: none;
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
     background-color: transparent;
+    margin-block: 0.15em;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: darkslateblue;
-    width: 5px;
-    border-radius: 10px;
+    background: linear-gradient(225deg, #312e81, #4a46a3);
+    border-radius: 999vmax;
   }
 
   .custom-scrollbar-dark::-webkit-scrollbar-thumb {
-    background-color: #312e81;
+    background: linear-gradient(225deg, #312e81, #4a46a3);
+    border-radius: 999vmax;
   }
 }
