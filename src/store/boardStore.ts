@@ -9,6 +9,7 @@ import {
   uploadImage,
 } from '@/libs/appwrite';
 import { getTodosGroupedByColumn } from '@/libs/getTodosGroupedByColumn';
+import { toast } from 'react-hot-toast';
 import { create } from 'zustand';
 
 interface BoardState {
@@ -55,14 +56,19 @@ const useBoardStore = create<BoardState>((set, get) => ({
   setBoardState: (board) => set({ board }),
 
   updateTodoInDB: async (todo, columnId) => {
+    const loader = toast.loading('Loading...');
     await updateDocumentById(todo.$id, {
       title: todo.title,
       status: columnId,
     });
+    toast.success('Loaded!', { id: loader });
   },
 
   addTask: async (todo: string, columnId: TypedColumn, image?: File | null) => {
     let file: Image | undefined;
+    let loadingToastId: string | undefined;
+
+    loadingToastId = toast.loading('등록중.....');
 
     //* 이미지가 존재하면 이미지를 먼저 업로드하고 파일 정보를 가져온다.
     if (image) {
@@ -111,6 +117,8 @@ const useBoardStore = create<BoardState>((set, get) => ({
         updateColumns.get(columnId)?.todos.push(newTodo);
       }
 
+      toast.success('작업 추가 완료!', { id: loadingToastId });
+
       return {
         board: {
           columns: updateColumns,
@@ -120,6 +128,10 @@ const useBoardStore = create<BoardState>((set, get) => ({
   },
 
   deleteTask: async (taskIndex, todo, id) => {
+    let loadingToastId: string | undefined;
+
+    loadingToastId = toast.loading('삭제중.....');
+
     const updatedColumns = new Map(get().board.columns);
 
     // delete todoId from updatedColumns
@@ -138,6 +150,8 @@ const useBoardStore = create<BoardState>((set, get) => ({
       await deleteFile(todo.image.bucketId, todo.image.fileId);
     }
     await deleteDocumentById(todo.$id);
+
+    toast.success('삭제 완료!', { id: loadingToastId });
   },
 
   searchString: '',

@@ -15,3 +15,7 @@ OPENAI_API_KEY=
 ## Note
 
 1. OPENAPI KEY 기간 끝났음....
+
+## TODO
+
+[ ] 클라이언트에서의 정렬을 DB에 반영하기

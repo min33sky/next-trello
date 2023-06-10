@@ -1,5 +1,6 @@
 import Modal from '@/components/Modal';
 import './globals.css';
+import ClientProvider from '@/components/ClientProvider';
 
 export const metadata = {
   title: 'Next Trello',
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`custom-scrollbar bg-[#F5F6F8] antialiased `}>
-        {children}
+        <ClientProvider>{children}</ClientProvider>
         <Modal />
       </body>
     </html>

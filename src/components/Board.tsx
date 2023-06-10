@@ -4,6 +4,7 @@ import useBoardStore from '@/store/boardStore';
 import { useEffect, useRef, useState } from 'react';
 import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 import Column from './Column';
+import { toast } from 'react-hot-toast';
 
 export default function Board() {
   /**
